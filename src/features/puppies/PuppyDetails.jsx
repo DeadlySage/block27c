@@ -1,3 +1,5 @@
+import { useGetPuppyQuery, useDeletePuppyMutation } from "./puppySlice";
+
 /**
  * @component
  * Shows comprehensive information about the selected puppy, if there is one.
@@ -5,11 +7,20 @@
  */
 export default function PuppyDetails({ selectedPuppyId, setSelectedPuppyId }) {
   // TODO: Grab data from the `getPuppy` query
+  const { isLoading, data: puppy } = useGetPuppyQuery(selectedPuppyId);
+  const [deletePuppy] = useDeletePuppyMutation();
+  
+  // Console log for testing
+  {puppy && console.log("PuppyDetails:",puppy)}
 
   // TODO: Use the `deletePuppy` mutation to remove a puppy when the button is clicked
-
-  function removePuppy(id) {
-    setSelectedPuppyId();
+  const removePuppy = async (id) => {
+    try {
+      setSelectedPuppyId();
+      await deletePuppy(id);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   // There are 3 possibilities:
